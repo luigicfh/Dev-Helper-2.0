@@ -1,0 +1,32 @@
+[
+    {
+        "project": "default",
+        "commands": [
+            {
+                "name": "initg",
+                "description": "init gcloud",
+                "command": "gcloud init",
+                "last_change": "datetime"
+            }
+        ],
+        "asked": [
+            {
+                "question": "How to print in python",
+                "answer": "Using thr print function",
+                "date_asked": "datetime"
+            }
+        ]
+    },
+    {
+        "project": "gesex",
+        "commands": [
+            {
+                "name": "iap",
+                "description": null,
+                "command": "gcloud compute start-iap-tunnel plums 3389 --local-host-port=localhost:0 --zone=southamerica-west1-a",
+                "last_change": "2023-04-26T18:02:07.603806"
+            }
+        ],
+        "asked": []
+    }
+]
