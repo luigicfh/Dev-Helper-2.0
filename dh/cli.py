@@ -4,17 +4,10 @@ from .backend.document_db import DocumentDatabase
 from .backend.validations import *
 import os
 import yaml
-import openai
-import markdown
-import streamlit as st
-from pygments import highlight
-from pygments.lexers import get_lexer_by_name
-from pygments.formatters import TerminalFormatter
 
 
 module_directory = os.path.dirname(__file__)
 document_db_path = os.path.join(module_directory, "backend", "db.json")
-openai.api_key = os.environ.get("API_KEY")
 
 def generate_new_command(name: str, desc:str, command:str):
     return {
@@ -22,37 +15,6 @@ def generate_new_command(name: str, desc:str, command:str):
         "description": desc,
         "command": command
     }
-
-def chat_with_gpt(prompt):
-    response = openai.Completion.create(
-        engine='gpt-3.5-turbo',
-        prompt=prompt,
-        max_tokens=100,
-        n=1,
-        stop=None,
-        temperature=0.7,
-    )
-    output = response.choices[0].text.strip()
-    response_type = response.choices[0].type
-
-    if response_type == 'text':
-        print(output)
-    elif response_type == 'code':
-        display_code_as_markdown(output, "python")
-    else:
-        print(output)
-
-
-def render_markdown(markdown_text):
-    st.title("Markdown Renderer")
-    html = markdown.markdown(markdown_text)
-    st.markdown(html, unsafe_allow_html=True)
-
-def display_code_as_markdown(code, language):
-    lexer = get_lexer_by_name(language)
-    formatter = TerminalFormatter()
-    highlighted_code = highlight(code, lexer, formatter)
-    print(highlighted_code)
 
 
 def parse():
@@ -63,7 +25,8 @@ def parse():
             'update',
             'run', 
             'config', 
-            'switch'
+            'switch',
+            'ask'
         ]
     parser = argparse.ArgumentParser()
     parser.add_argument("cmd", 
@@ -73,7 +36,7 @@ def parse():
     parser.add_argument('-project', '-p', type=str, default=None)
     parser.add_argument('-description', '-d', type=str)
     parser.add_argument('-command', '-c', type=str, default=None)
-    # parser.add_argument('-question', '-q', type=str)
+    parser.add_argument('-question', '-q', type=str)
     parser.add_argument("-shortcut", "-s", type=str, default=None)
     args = parser.parse_args()
     db = DocumentDatabase(document_db_path)
@@ -175,6 +138,7 @@ def parse():
                 raise ValueError(f"Project {project} does not exist.")
             db.add_document("activeConfig", {"project": project})
             db.save()
+        active_config = db.data.get("activeConfig")
         active_project = active_config.get("project")
         project = db.get_document(active_project)
         commands = project.get("commands")

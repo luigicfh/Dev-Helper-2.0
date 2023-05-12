@@ -8,7 +8,7 @@ with open("README.md", "r", encoding="utf-8") as fhand:
 
 setuptools.setup(
     name="Dev-Helper-CLI",
-    version="0.0.10",
+    version="0.0.14",
     author="Luis Moreno",
     author_email="luis.cfh.90@gmail.com",
     description=("A CLI program to help devs be more productive."),
@@ -23,7 +23,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    install_requires=["PyYAML", "openai", "streamlit", "Pygments", "Markdown"],
+    install_requires=["PyYAML"],
     packages=setuptools.find_packages(),
     python_requires=">=3.6",
     entry_points={
